@@ -108,7 +108,7 @@ class GCMApp:
         """解析命令行参数"""
         parser = argparse.ArgumentParser(
             prog="gcm",
-            description="自动生成 Git Commit Message"
+            description="Write Git commits the smart way."
         )
 
         parser.add_argument(
