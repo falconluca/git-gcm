@@ -26,6 +26,7 @@ export GCM_MODEL=gpt-4o-mini
 git add .
 gcm                # 生成 commit message 并进入交互菜单
 gcm -v             # 生成详细 commit message 并进入交互菜单
+gcm -f             # 提交时跳过 git hooks（等价 git commit --no-verify）
 gcm --print-only   # 仅输出 message，不提交（用于脚本/管道）
 ```
 

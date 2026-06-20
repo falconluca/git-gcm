@@ -91,17 +91,22 @@ class GitRepo:
 
         return StagedChanges(files=files, diff_content=diff)
 
-    def commit(self, message: str) -> CommitResult:
+    def commit(self, message: str, no_verify: bool = False) -> CommitResult:
         """执行 git commit
 
         Args:
             message: commit message
+            no_verify: 是否跳过 pre-commit / commit-msg 钩子（等价 --no-verify）
 
         Returns:
             CommitResult
         """
+        cmd = ["git", "commit", "-m", message]
+        if no_verify:
+            cmd.append("--no-verify")
+
         result = subprocess.run(
-            ["git", "commit", "-m", message],
+            cmd,
             capture_output=True,
             text=True,
             check=False,

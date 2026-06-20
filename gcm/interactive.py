@@ -29,8 +29,9 @@ class InteractiveCommitter:
     _CHOICE_EDIT = "🚀 修改 message"
     _CHOICE_PRINT = "📋 仅输出，不提交"
 
-    def __init__(self, repo: GitRepo):
+    def __init__(self, repo: GitRepo, no_verify: bool = False):
         self.repo = repo
+        self.no_verify = no_verify
 
     def run(self, commit_msg: str) -> None:
         """展示菜单，允许直接提交、修改后提交或仅输出。
@@ -96,13 +97,15 @@ class InteractiveCommitter:
         print("-" * 40)
         print(commit_msg)
         print("-" * 40)
+        if self.no_verify:
+            print("⏭️  已启用 -f/--no-verify：提交时将跳过 git hooks")
 
     def _commit(self, commit_msg: str) -> None:
         """执行 git commit 并打印结果。
 
         提交失败时将 git 的错误信息输出到 stderr 并以非零状态码退出。
         """
-        result = self.repo.commit(commit_msg)
+        result = self.repo.commit(commit_msg, no_verify=self.no_verify)
 
         if result.success:
             if result.stdout:

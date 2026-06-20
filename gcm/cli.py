@@ -59,7 +59,7 @@ class GCMApp:
             return
 
         # 交互模式：菜单 → 修改/确认 → 提交
-        InteractiveCommitter(self.repo).run(commit_msg)
+        InteractiveCommitter(self.repo, no_verify=self.args.no_verify).run(commit_msg)
 
     def _load_env(self) -> None:
         """加载 .env 文件"""
@@ -140,6 +140,13 @@ class GCMApp:
             dest="print_only",
             action="store_true",
             help="仅输出 commit message，不进入交互提交（用于脚本/管道）"
+        )
+
+        parser.add_argument(
+            "-f", "--no-verify",
+            dest="no_verify",
+            action="store_true",
+            help="跳过 pre-commit / commit-msg 钩子（等价 git commit --no-verify）"
         )
 
         parser.add_argument(
