@@ -6,8 +6,37 @@
 
 ## 安装
 
+**方式一：pipx（推荐）**
+
+pipx 在隔离环境安装命令行工具，不污染系统 Python，也避开 macOS 新版本 `externally-managed-environment` 报错。
+
+```bash
+# Mac 用户先装 pipx
+brew install pipx && pipx ensurepath
+
+# 安装
+pipx install git-gcm
+```
+
+**方式二：pip**
+
 ```bash
 pip install git-gcm
+```
+
+**从源码安装（尚未发布到 PyPI 时）**
+
+```bash
+pipx install git+https://github.com/falconluca/gcm.git
+# 或
+pip install git+https://github.com/falconluca/gcm.git
+```
+
+**升级到新版本**
+
+```bash
+pipx upgrade git-gcm     # pipx 用户
+pip install -U git-gcm   # pip 用户
 ```
 
 ## 配置
@@ -19,6 +48,8 @@ export GCM_API_URL=https://api.openai.com/v1
 export GCM_API_KEY=your-api-key
 export GCM_MODEL=gpt-4o-mini
 ```
+
+> 想让配置持久生效，把上面的 `export` 写进 `~/.zshrc`（Mac 默认 zsh）或 `~/.bashrc`，再执行 `source ~/.zshrc`。也支持智谱、DeepSeek 等 OpenAI 兼容服务，改 `GCM_API_URL` 和 `GCM_MODEL` 即可。
 
 ## 使用
 
