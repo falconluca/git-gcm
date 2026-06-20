@@ -14,6 +14,13 @@ from gcm.llm import LLMClient, LLMConfig
 from gcm.interactive import InteractiveCommitter
 
 
+class _ZhHelpFormatter(argparse.HelpFormatter):
+    """中文帮助格式：将 argparse 默认的 'usage:' 标题本地化为 '用法: '。"""
+
+    def _format_usage(self, usage, actions, groups, prefix):
+        return super()._format_usage(usage, actions, groups, prefix or "用法: ")
+
+
 class GCMApp:
     """GCM 应用主控：加载配置、解析参数、编排「生成→交互→提交」流程"""
 
@@ -108,7 +115,18 @@ class GCMApp:
         """解析命令行参数"""
         parser = argparse.ArgumentParser(
             prog="gcm",
-            description="Write Git commits the smart way."
+            description="基于大模型的 Git Commit Message 生成",
+            formatter_class=_ZhHelpFormatter,
+            add_help=False,
+        )
+        # 本地化 argparse 的 "options:" 分组标题
+        parser._optionals.title = "可选参数"
+
+        parser.add_argument(
+            "-h", "--help",
+            action="help",
+            default=argparse.SUPPRESS,
+            help="显示此帮助信息并退出",
         )
 
         parser.add_argument(
@@ -152,7 +170,8 @@ class GCMApp:
         parser.add_argument(
             "--version",
             action="version",
-            version=f"%(prog)s {__version__}"
+            version=f"%(prog)s {__version__}",
+            help="显示版本号并退出",
         )
 
         return parser.parse_args()
