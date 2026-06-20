@@ -15,14 +15,16 @@ class InteractiveCommitter:
     """生成 commit message 后的 TUI 交互与提交"""
 
     # 自定义 TUI 配色：箭头与当前高亮项统一为青色
-    _STYLE = Style([
-        ("qmark", "fg:#5fd7ff bold"),
-        ("pointer", "fg:#5fd7ff bold"),
-        ("highlighted", "fg:#5fd7ff bold"),
-        ("selected", "fg:#5fd7ff"),
-        ("answer", "fg:#5fd7ff bold"),
-        ("instruction", "fg:#808080"),
-    ])
+    _STYLE = Style(
+        [
+            ("qmark", "fg:#5fd7ff bold"),
+            ("pointer", "fg:#5fd7ff bold"),
+            ("highlighted", "fg:#5fd7ff bold"),
+            ("selected", "fg:#5fd7ff"),
+            ("answer", "fg:#5fd7ff bold"),
+            ("instruction", "fg:#808080"),
+        ]
+    )
 
     # 菜单选项（带 emoji，提升辨识度）
     _CHOICE_COMMIT = "🍾 提交此 message"
@@ -98,7 +100,7 @@ class InteractiveCommitter:
         print(commit_msg)
         print("-" * 40)
         if self.no_verify:
-            print("⏭️  已启用 -f/--no-verify：提交时将跳过 git hooks")
+            print("❗️ 已启用 -f/--no-verify：提交时将跳过 git hooks")
 
     def _commit(self, commit_msg: str) -> None:
         """执行 git commit 并打印结果。
