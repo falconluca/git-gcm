@@ -1,4 +1,4 @@
-.PHONY: install uninstall clean test help build clean-bin venv activate
+.PHONY: install uninstall clean test help build clean-bin venv activate dist publish version
 
 BIN_DIR ?= ~/bin
 VENV_DIR ?= .venv
@@ -16,6 +16,11 @@ help:
 	@echo "  make clean-bin  清理二进制文件"
 	@echo "  make venv       创建虚拟环境"
 	@echo "  make activate   进入虚拟环境"
+	@echo ""
+	@echo "发布："
+	@echo "  make version VERSION=x.y.z  修改版本号"
+	@echo "  make dist       构建并校验发布包（clean + build + check）"
+	@echo "  make publish    发布到 PyPI（构建校验后 upload）"
 
 venv:
 	@echo "创建虚拟环境..."
@@ -58,3 +63,26 @@ clean-bin:
 	rm -rf build/ dist/ gcm.spec
 	rm -f $(BIN_DIR)/gcm
 	@echo "清理完成"
+
+version:
+	@if [ -z "$(VERSION)" ]; then \
+		echo "错误：未指定版本号，用法: make version VERSION=2.1.0"; \
+		exit 1; \
+	fi
+	@if ! echo "$(VERSION)" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$$'; then \
+		echo "错误：版本号格式应为 x.y.z（如 2.1.0），当前: $(VERSION)"; \
+		exit 1; \
+	fi
+	@echo "更新版本号为 $(VERSION)..."
+	sed -i.bak 's/^version = ".*"/version = "$(VERSION)"/' pyproject.toml && rm -f pyproject.toml.bak
+	sed -i.bak 's/^__version__ = ".*"/__version__ = "$(VERSION)"/' gcm/__init__.py && rm -f gcm/__init__.py.bak
+	@echo "已更新版本号为 $(VERSION)（pyproject.toml + gcm/__init__.py）"
+
+dist: clean
+	@echo "构建并校验发布包..."
+	.venv/bin/python -m build
+	.venv/bin/twine check dist/*
+
+publish: dist
+	@echo "上传到 PyPI（需配置 ~/.pypirc 或 API token）..."
+	.venv/bin/twine upload dist/*
