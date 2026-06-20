@@ -9,13 +9,14 @@ from typing import Optional
 from dotenv import load_dotenv
 
 from gcm import __version__
-from gcm.git_utils import (
+from gcm.git import (
     is_git_repo,
     get_staged_changes,
     StagedChanges
 )
-from gcm.prompts import build_user_prompt, get_system_prompt
-from gcm.llm_client import LLMClient, LLMConfig
+from gcm.prompt import build_user_prompt, get_system_prompt
+from gcm.llm import LLMClient, LLMConfig
+from gcm.interactive import interactive_commit
 
 
 def find_env_file() -> Optional[Path]:
@@ -95,6 +96,13 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
+        "--print-only", "--no-commit",
+        dest="print_only",
+        action="store_true",
+        help="仅输出 commit message，不进入交互提交（用于脚本/管道）"
+    )
+
+    parser.add_argument(
         "--version",
         action="version",
         version=f"%(prog)s {__version__}"
@@ -171,8 +179,13 @@ def main():
         print(f"生成失败: {e}", file=sys.stderr)
         sys.exit(1)
 
-    # 输出结果
-    print(commit_msg)
+    # 仅输出模式（--print-only 或非交互终端）：保持旧行为，便于脚本/管道
+    if args.print_only or not sys.stdin.isatty():
+        print(commit_msg)
+        return
+
+    # 交互模式：菜单 → 修改/确认 → 提交
+    interactive_commit(commit_msg)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 
 import subprocess
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from pathlib import Path
 
 
@@ -128,3 +128,21 @@ def get_status_symbol(status: str) -> str:
         "T": "类型变更"
     }
     return symbols.get(status, status)
+
+
+def commit_changes(message: str) -> Tuple[bool, str, str]:
+    """执行 git commit
+
+    Args:
+        message: commit message
+
+    Returns:
+        (success, stdout, stderr)
+    """
+    result = subprocess.run(
+        ["git", "commit", "-m", message],
+        capture_output=True,
+        text=True,
+        check=False
+    )
+    return result.returncode == 0, result.stdout, result.stderr

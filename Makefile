@@ -2,6 +2,7 @@
 
 BIN_DIR ?= ~/bin
 VENV_DIR ?= .venv
+PIP_INDEX_URL ?= https://pypi.tuna.tsinghua.edu.cn/simple
 
 help:
 	@echo "GCM - Git Commit Message Generator"
@@ -27,7 +28,7 @@ activate:
 	@source $(VENV_DIR)/bin/activate && echo "已进入虚拟环境，输入 'exit' 退出" && $(SHELL)
 
 install:
-	pip install -e .
+	pip install -e . -i $(PIP_INDEX_URL)
 
 uninstall:
 	pip uninstall -y gcm
@@ -46,7 +47,7 @@ rebuild: clean install
 
 build:
 	@echo "打包二进制文件..."
-	pip install pyinstaller -q
+	pip install pyinstaller -q -i $(PIP_INDEX_URL)
 	pyinstaller --onefile --name gcm gcm/cli.py
 	install -m 755 dist/gcm $(BIN_DIR)/
 	rm -rf build/ dist/ gcm.spec

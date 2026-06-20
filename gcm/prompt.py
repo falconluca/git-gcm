@@ -1,6 +1,6 @@
 """提示词模板模块"""
 
-from gcm.git_utils import StagedChanges, get_status_symbol
+from gcm.git import StagedChanges, get_status_symbol
 
 
 # 系统提示词
