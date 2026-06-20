@@ -24,9 +24,10 @@ class InteractiveCommitter:
         ("instruction", "fg:#808080"),
     ])
 
-    _CHOICE_COMMIT = "提交此 message"
-    _CHOICE_EDIT = "修改 message"
-    _CHOICE_PRINT = "仅输出，不提交"
+    # 菜单选项（带 emoji，提升辨识度）
+    _CHOICE_COMMIT = "🍾 提交此 message"
+    _CHOICE_EDIT = "🚀 修改 message"
+    _CHOICE_PRINT = "📋 仅输出，不提交"
 
     def __init__(self, repo: GitRepo):
         self.repo = repo
@@ -47,7 +48,7 @@ class InteractiveCommitter:
             choice = questionary.select(
                 "请选择操作",
                 choices=[self._CHOICE_COMMIT, self._CHOICE_EDIT, self._CHOICE_PRINT],
-                qmark="✨",
+                qmark="🤖",
                 pointer="❯",
                 style=self._STYLE,
                 instruction="(↑↓ 选择, Enter 确认)",
@@ -56,7 +57,7 @@ class InteractiveCommitter:
             # ESC / Ctrl-C → 取消
             if choice is None:
                 self._clear_screen()
-                print("已取消。")
+                print("🚪 已取消。")
                 return
 
             if choice == self._CHOICE_PRINT:
@@ -66,11 +67,16 @@ class InteractiveCommitter:
 
             if choice == self._CHOICE_EDIT:
                 new_msg = questionary.text(
-                    "输入新的 commit message（留空保留原文）",
+                    "编辑 commit message（直接修改预填内容）",
+                    default=current,
+                    multiline=True,
+                    qmark="🚀",
                     style=self._STYLE,
+                    instruction="(方向键移动光标，Alt+Enter 或 Esc→Enter 提交)\n",
                 ).ask()
-                if new_msg is not None and new_msg.strip():
-                    current = new_msg.strip()
+                # None: 取消编辑，保留原文；否则用编辑后的内容（未改即为原文）
+                if new_msg is not None:
+                    current = new_msg
                 continue
 
             # _CHOICE_COMMIT：清屏后干净展示最终 message 并提交（无二次确认）
@@ -86,7 +92,7 @@ class InteractiveCommitter:
 
     def _show_message(self, commit_msg: str) -> None:
         """展示当前的 commit message"""
-        print("✨ 生成的 commit message：")
+        print("📝 生成的 commit message：")
         print("-" * 40)
         print(commit_msg)
         print("-" * 40)
@@ -101,9 +107,9 @@ class InteractiveCommitter:
         if result.success:
             if result.stdout:
                 print(result.stdout)
-            print("✓ 提交成功")
+            print("✅ 提交成功")
         else:
-            print("提交失败：", file=sys.stderr)
+            print("❌ 提交失败：", file=sys.stderr)
             if result.stderr:
                 print(result.stderr, file=sys.stderr)
             sys.exit(1)

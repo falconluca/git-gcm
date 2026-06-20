@@ -28,13 +28,13 @@ class GCMApp:
 
         # 检查是否在 git 仓库中
         if not self.repo.is_repo():
-            print("错误: 当前目录不在 Git 仓库中", file=sys.stderr)
+            print("⚠️ 错误: 当前目录不在 Git 仓库中", file=sys.stderr)
             sys.exit(1)
 
         # 获取暂存区变更
         changes = self.repo.get_staged_changes()
         if not changes.files:
-            print("暂存区没有变更。请先使用 'git add' 添加变更。", file=sys.stderr)
+            print("📦 暂存区没有变更。请先使用 'git add' 添加变更。", file=sys.stderr)
             sys.exit(1)
 
         # 生成 commit message
@@ -47,10 +47,10 @@ class GCMApp:
                 builder.user_prompt(changes),
             )
         except ValueError as e:
-            print(f"配置错误: {e}", file=sys.stderr)
+            print(f"⚠️ 配置错误: {e}", file=sys.stderr)
             sys.exit(1)
         except RuntimeError as e:
-            print(f"生成失败: {e}", file=sys.stderr)
+            print(f"❌ 生成失败: {e}", file=sys.stderr)
             sys.exit(1)
 
         # 仅输出模式（--print-only 或非交互终端）：保持旧行为，便于脚本/管道
