@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/git-gcm.svg)](https://pypi.org/project/git-gcm/)
 
-基于大模型的 Git Commit Message 自动生成工具，支持所有 OpenAI 协议兼容的大模型服务
+基于大模型的 Git Commit Message 生成，支持所有 OpenAI 协议兼容的大模型服务
 
 ## 安装
 
