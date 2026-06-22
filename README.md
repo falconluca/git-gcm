@@ -28,11 +28,10 @@ export GCM_MODEL=gpt-4o-mini
 ## 使用
 
 ```bash
+gcm -h           # 查看帮助
 git add .
 gcm              # 生成 commit message 并进入交互菜单
 gcm -v           # 详细模式
-gcm -f           # 跳过 git hooks（等价 --no-verify）
-gcm --print-only # 仅输出，不提交
 ```
 
 生成后进入交互菜单（↑↓ 选择，Enter 确认）：
@@ -40,8 +39,6 @@ gcm --print-only # 仅输出，不提交
 - **提交** — 直接 `git commit`
 - **编辑** — 微调 message，Alt/⌥+Enter 保存
 - **仅输出** — 只打印不提交
-
-> 非交互终端（如 `gcm | cat`）自动跳过菜单，直接输出。
 
 ## 示例
 
