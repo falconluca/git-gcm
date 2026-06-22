@@ -115,7 +115,7 @@ class GCMApp:
         """解析命令行参数"""
         parser = argparse.ArgumentParser(
             prog="gcm",
-            description="基于大模型的 Git Commit Message 生成",
+            description="Write better Git commits, faster",
             formatter_class=_ZhHelpFormatter,
             add_help=False,
         )
